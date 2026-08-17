@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة التوطين المتقدمة | Saudization Professional Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #006837;
+            --primary-dark: #004d28;
+            --primary-light: #e6f3ed;
+            --accent: #d4af37;
+            --bg-body: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --radius: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --primary-light: #132e23;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 104, 55, 0.3);
+        }
+
+        .title-group h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .title-group p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-reset {
+            background: #ef4444;
+            color: white;
+            border: none;
+        }
+
+        .btn-reset:hover {
+            background: #dc2626;
+            color: white;
+            border-color: transparent;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 900px) {
+            .grid-layout {
+                grid-template-columns: 1.3fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: var(--card-bg);
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+            text-align: center;
+        }
+
+        select:focus, input[type="number"]:focus {
+            border-color: var(--primary);
+        }
+
+        .sub-jobs-wrapper {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-body);
+            margin-top: 10px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr 1fr;
+            gap: 10px;
+            background: var(--primary-light);
+            padding: 12px 10px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            color: var(--primary-dark);
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        html[data-theme="dark"] .table-header {
+            color: #4ade80;
+        }
+
+        .sub-jobs-container {
+            max-height: 380px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .job-row {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .job-row:last-child {
+            border-bottom: none;
+        }
+
+        .job-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        html[dir="ltr"] .job-name {
+            text-align: left;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .pct-badge {
+            background: var(--primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+            min-width: 65px;
+            text-align: center;
+        }
+
+        .preset-pills {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .pill:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .result-box {
+            background: var(--bg-body);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .result-box.highlight {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            grid-column: span 2;
+        }
+
+        .result-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .result-box.highlight .result-value {
+            color: var(--primary);
+            font-size: 2.2rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .status-success { background: #dcfce7; color: #15803d; }
+        .status-warning { background: #fef9c3; color: #a16207; }
+
+        table.summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        table.summary-table th, table.summary-table td {
+            padding: 10px;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+
+        html[dir="ltr"] table.summary-table th, html[dir="ltr"] table.summary-table td { text-align: left; }
+
+        table.summary-table th { color: var(--text-muted); font-weight: 600; }
+        table.summary-table td { font-weight: 700; }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">🇸🇦</div>
+            <div class="title-group">
+                <h1 id="txt-title">حاسبة التوطين الذكية (تحدي المهن والنسب)</h1>
+                <p id="txt-subtitle">إدخال الموظفين لكل مهنة فرعية لحساب التوطين بدقة</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <button class="btn-toggle btn-reset" onclick="resetData()" id="btn-reset">🔄 مسح وإعادة ضبط</button>
+            <button class="btn-toggle" onclick="toggleLanguage()" id="btn-lang">English</button>
+            <button class="btn-toggle" onclick="toggleTheme()" id="btn-theme">🌙</button>
+        </div>
+    </header>
+
+    <div class="grid-layout">
+        <!-- Controls Card -->
+        <div class="card">
+            <div class="card-title" id="txt-input-header">تحديد القطاع وإدخال الموظفين</div>
+
+            <!-- Main Sector Selection -->
+            <div class="form-group">
+                <label for="professionSelect" id="lbl-profession">اختر القطاع الرئيسي (Main Sector):</label>
+                <select id="professionSelect" onchange="onProfessionChange()">
+                    <option value="custom">🔍 مهنة مخصصة / أدخل يدوي (Custom Entry)</option>
+                    <option value="engineering" data-rate="30">📐 مهندسين (Engineering) - 30%</option>
+                    <option value="marketing" data-rate="60" selected>📢 تسويق (Marketing) - 60%</option>
+                    <option value="sales" data-rate="60">💼 مبيعات (Sales Professional) - 60%</option>
+                </select>
+            </div>
+
+            <!-- Target Rate Slider & Pills (10% to 100%) -->
+            <div class="form-group">
+                <label id="lbl-target-rate">نسبة التوطين المطلوبة ( Target Saudization % ):</label>
+                <div class="slider-container">
+                    <input type="range" id="targetRange" min="0" max="100" value="60" oninput="syncTargetFromRange(this.value)">
+                    <div class="pct-badge" id="targetBadge">60%</div>
+                </div>
+                <div class="preset-pills">
+                    <span class="pill" onclick="setPresetPct(10)">10%</span>
+                    <span class="pill" onclick="setPresetPct(20)">20%</span>
+                    <span class="pill" onclick="setPresetPct(30)">30%</span>
+                    <span class="pill" onclick="setPresetPct(40)">40%</span>
+                    <span class="pill" onclick="setPresetPct(50)">50%</span>
+                    <span class="pill" onclick="setPresetPct(60)">60%</span>
+                    <span class="pill" onclick="setPresetPct(70)">70%</span>
+                    <span class="pill" onclick="setPresetPct(80)">80%</span>
+                    <span class="pill" onclick="setPresetPct(90)">90%</span>
+                    <span class="pill" onclick="setPresetPct(100)">100%</span>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px dashed var(--border); margin: 15px 0;">
+
+            <!-- Sub-Jobs Section -->
+            <div class="form-group">
+                <label id="lbl-jobs-list">تفاصيل الموظفين حسب المهن الفرعية:</label>
+                <div class="sub-jobs-wrapper">
+                    <div class="table-header">
+                        <span id="th-job-title">المهنة الفرعية</span>
+                        <span id="th-non-saudi">غير سعودي (أجنبي)</span>
+                        <span id="th-saudi">سعودي</span>
+                    </div>
+                    <div class="sub-jobs-container" id="jobsListContainer">
+                        <!-- Dynamic Rows -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Card -->
+        <div class="card">
+            <div class="card-title" id="txt-results-header">نتائج التقرير والتحليل الإجمالي</div>
+
+            <div class="results-grid">
+                <div class="result-box highlight">
+                    <div class="result-title" id="res-lbl-req">السعوديين المطلوب توظيفهم لتحقيق النسبة</div>
+                    <div class="result-value" id="res-val-req">0</div>
+                    <div class="status-badge" id="res-status-badge">محققة ✔</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-title" id="res-lbl-curr-rate">نسبة التوطين الحالية</div>
+                    <div class="result-value" id="res-val-curr-rate">0.00%</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-title" id="res-lbl-target-rate">النسبة المطلوبة (Target)</div>
+                    <div class="result-value" style="color:var(--primary)" id="res-val-target">60.00%</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-title" id="res-lbl-final-saudi">إجمالي السعوديين النهائي</div>
+                    <div class="result-value" id="res-val-final-saudi">0</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-title" id="res-lbl-final-total">إجمالي الموظفين الكلي</div>
+                    <div class="result-value" id="res-val-final-total">0</div>
+                </div>
+
+                <div class="result-box" style="grid-column: span 2;">
+                    <div class="result-title" id="res-lbl-adj-rate">نسبة التوطين بعد التعديل</div>
+                    <div class="result-value" style="color: var(--primary);" id="res-val-adj-rate">0.00%</div>
+                </div>
+            </div>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th id="th-metric">المعيار</th>
+                        <th id="th-before">قبل التعديل</th>
+                        <th id="th-after">بعد التعديل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="td-lbl-saudis">إجمالي السعوديين</td>
+                        <td id="td-curr-saudi">0</td>
+                        <td id="td-final-saudi" style="color:var(--primary);">0</td>
+                    </tr>
+                    <tr>
+                        <td id="td-lbl-foreigners">إجمالي الأجانب</td>
+                        <td id="td-curr-foreign">0</td>
+                        <td id="td-final-foreign">0</td>
+                    </tr>
+                    <tr>
+                        <td id="td-lbl-rate">نسبة التوطين</td>
+                        <td id="td-curr-rate">0.00%</td>
+                        <td id="td-final-rate" style="color:var(--primary);">0.00%</td>
+                    </tr>
+                    <tr>
+                        <td id="td-lbl-total">إجمالي الموظفين</td>
+                        <td id="td-curr-total">0</td>
+                        <td id="td-final-total">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p id="txt-footer">حاسبة التوطين المرنة (المهن والنسب من 0% إلى 100%)</p>
+    <p>MU21</p>
+</footer>
+
+<script>
+    let currentLang = 'ar';
+    let targetPct = 60;
+
+    const professionsData = {
+        custom: {
+            ar: ["مهنة عامة / أدخل يدوي"],
+            en: ["General Profession / Custom Entry"]
+        },
+        engineering: {
+            ar: [
+                "مهندس مدني", "مهندس كهربائي", "مهندس ميكانيكي", 
+                "مهندس معماري", "مهندس كيميائي", "مهندس صنعتی", 
+                "مهندس برمجيات وتكنولوجيا المعلومات"
+            ],
+            en: [
+                "Civil Engineer", "Electrical Engineer", "Mechanical Engineer", 
+                "Architectural Engineer", "Chemical Engineer", "Industrial Engineer", 
+                "Software & IT Engineer"
+            ]
+        },
+        marketing: {
+            ar: [
+                "مدير تسويق", "وكيل دعاية وإعلان", "مدير دعاية وإعلان", 
+                "مصمم جرافيك", "مصمم إعلان", "أخصائي إعلامي", 
+                "أخصائي علاقات عامة", "أخصائي دعاية وإعلان", "أخصائي تسويق", 
+                "مدير علاقات عامة", "مصور فوتوغرافي"
+            ],
+            en: [
+                "Marketing Manager", "Advertising Agent", "Advertising Manager", 
+                "Graphic Designer", "Advertising Designer", "Media Specialist", 
+                "Public Relations Specialist", "Advertising Specialist", "Marketing Specialist", 
+                "Public Relations Manager", "Photographer"
+            ]
+        },
+        sales: {
+            ar: [
+                "مدير مبيعات", "مدير مبيعات تجزئة", "مدير مبيعات جملة", 
+                "مندوب مبيعات", "وسيط سلع مستقبلية", "أخصائي مبيعات أجهزة تقنية المعلومات والاتصالات", 
+                "أخصائي مبيعات", "أخصائي تجاري", "وسيط سلع"
+            ],
+            en: [
+                "Sales Manager", "Retail Sales Manager", "Wholesale Sales Manager", 
+                "Sales Representative", "Futures Commodities Broker", "ICT Equipment Sales Specialist", 
+                "Sales Specialist", "Commercial Specialist", "Commodity Broker"
+            ]
+        }
+    };
+
+    const translations = {
+        ar: {
+            title: "حاسبة التوطين الذكية (تحدي المهن والنسب)",
+            subtitle: "إدخال الموظفين لكل مهنة فرعية لحساب التوطين بدقة",
+            inputHeader: "تحديد القطاع وإدخال الموظفين",
+            lblProfession: "اختر القطاع الرئيسي (Main Sector):",
+            lblTargetRate: "نسبة التوطين المطلوبة ( Target Saudization % ):",
+            lblJobsList: "تفاصيل الموظفين حسب المهن الفرعية:",
+            thJobTitle: "المهنة الفرعية",
+            thNonSaudi: "غير سعودي (أجنبي)",
+            thSaudi: "سعودي",
+            resultsHeader: "نتائج التقرير والتحليل الإجمالي",
+            resReq: "السعوديين المطلوب توظيفهم لتحقيق النسبة",
+            resCurrRate: "نسبة التوطين الحالية",
+            resTargetRate: "النسبة المطلوبة (Target)",
+            resFinalSaudi: "إجمالي السعوديين النهائي",
+            resFinalTotal: "إجمالي الموظفين الكلي",
+            resAdjRate: "نسبة التوطين بعد التعديل",
+            thMetric: "المعيار",
+            thBefore: "قبل التعديل",
+            thAfter: "بعد التعديل",
+            tdSaudis: "إجمالي السعوديين",
+            tdForeigners: "إجمالي الأجانب",
+            tdRate: "نسبة التوطين",
+            tdTotal: "إجمالي الموظفين",
+            footer: "حاسبة التوطين المتقدمة المرنة (دعم جميع المهن والنسب من 0% إلى 100%)",
+            statusMet: "النسبة محققة ✔",
+            statusNeed: "مطلوب توظيف إضافي ⚠️",
+            btnReset: "🔄 مسح وإعادة ضبط"
+        },
+        en: {
+            title: "Smart Saudization Calculator",
+            subtitle: "Detailed sub-profession inputs for accurate Saudization calculation",
+            inputHeader: "Sector & Employee Breakdown Inputs",
+            lblProfession: "Select Main Sector:",
+            lblTargetRate: "Adjust Target Saudization Rate (%):",
+            lblJobsList: "Employee Count by Sub-Profession:",
+            thJobTitle: "Sub-Profession",
+            thNonSaudi: "Non-Saudi",
+            thSaudi: "Saudi",
+            resultsHeader: "Overall Analysis & Output Results",
+            resReq: "Additional Saudis Required",
+            resCurrRate: "Current Saudization Rate",
+            resTargetRate: "Target Required Rate",
+            resFinalSaudi: "Final No. of Saudi Employees",
+            resFinalTotal: "Total Employees After Hiring",
+            resAdjRate: "Saudization Rate After Adjustment",
+            thMetric: "Metric",
+            thBefore: "Current",
+            thAfter: "Adjusted",
+            tdSaudis: "Total Saudis",
+            tdForeigners: "Total Non-Saudis",
+            tdRate: "Saudization Rate",
+            tdTotal: "Total Employees",
+            footer: "Advanced Flexible Saudization Calculator (Supports all rates from 0% to 100%)",
+            statusMet: "Target Met ✔",
+            statusNeed: "Hiring Required ⚠️",
+            btnReset: "🔄 Clear & Reset"
+        }
+    };
+
+    function onProfessionChange() {
+        const select = document.getElementById('professionSelect');
+        const selectedValue = select.value;
+        const selectedOption = select.options[select.selectedIndex];
+        const defaultRate = selectedOption.getAttribute('data-rate');
+        
+        if (defaultRate !== null) {
+            setPresetPct(parseInt(defaultRate));
+        }
+
+        buildJobRows(selectedValue);
+    }
+
+    function buildJobRows(sectorKey) {
+        const container = document.getElementById('jobsListContainer');
+        container.innerHTML = '';
+
+        const jobs = professionsData[sectorKey][currentLang];
+
+        jobs.forEach((jobName) => {
+            const row = document.createElement('div');
+            row.className = 'job-row';
+
+            row.innerHTML = `
+                <div class="job-name">${jobName}</div>
+                <div>
+                    <input type="number" class="non-saudi-input" min="0" value="0" placeholder="0" oninput="calculate()">
+                </div>
+                <div>
+                    <input type="number" class="saudi-input" min="0" value="0" placeholder="0" oninput="calculate()">
+                </div>
+            `;
+            container.appendChild(row);
+        });
+
+        calculate();
+    }
+
+    function resetData() {
+        document.querySelectorAll('.non-saudi-input, .saudi-input').forEach(input => {
+            input.value = 0;
+        });
+        calculate();
+    }
+
+    function syncTargetFromRange(val) {
+        targetPct = parseInt(val) || 0;
+        document.getElementById('targetBadge').innerText = targetPct + '%';
+        calculate();
+    }
+
+    function setPresetPct(val) {
+        targetPct = val;
+        document.getElementById('targetRange').value = val;
+        document.getElementById('targetBadge').innerText = val + '%';
+        calculate();
+    }
+
+    function calculate() {
+        let totalForeign = 0;
+        let totalSaudiCurrent = 0;
+
+        document.querySelectorAll('.non-saudi-input').forEach(input => {
+            totalForeign += Math.max(0, parseInt(input.value) || 0);
+        });
+
+        document.querySelectorAll('.saudi-input').forEach(input => {
+            totalSaudiCurrent += Math.max(0, parseInt(input.value) || 0);
+        });
+
+        let finalSaudiRequired = 0;
+        if (targetPct >= 100) {
+            finalSaudiRequired = totalForeign > 0 ? 999 : totalSaudiCurrent;
+        } else if (targetPct > 0) {
+            finalSaudiRequired = Math.ceil((targetPct * totalForeign) / (100 - targetPct));
+        }
+
+        const additionalRequired = Math.max(0, finalSaudiRequired - totalSaudiCurrent);
+        const finalSaudiTotal = Math.max(totalSaudiCurrent, finalSaudiRequired);
+        const totalCurrent = totalForeign + totalSaudiCurrent;
+        const currentRate = totalCurrent > 0 ? ((totalSaudiCurrent / totalCurrent) * 100).toFixed(2) + '%' : '0.00%';
+        const totalAfter = totalForeign + finalSaudiTotal;
+        const adjustedRate = totalAfter > 0 ? ((finalSaudiTotal / totalAfter) * 100).toFixed(2) + '%' : '0.00%';
+
+        document.getElementById('res-val-req').innerText = additionalRequired;
+        document.getElementById('res-val-curr-rate').innerText = currentRate;
+        document.getElementById('res-val-target').innerText = targetPct.toFixed(2) + '%';
+        document.getElementById('res-val-final-saudi').innerText = finalSaudiTotal;
+        document.getElementById('res-val-final-total').innerText = totalAfter;
+        document.getElementById('res-val-adj-rate').innerText = adjustedRate;
+
+        document.getElementById('td-curr-saudi').innerText = totalSaudiCurrent;
+        document.getElementById('td-final-saudi').innerText = finalSaudiTotal;
+        document.getElementById('td-curr-foreign').innerText = totalForeign;
+        document.getElementById('td-final-foreign').innerText = totalForeign;
+        document.getElementById('td-curr-rate').innerText = currentRate;
+        document.getElementById('td-final-rate').innerText = adjustedRate;
+        document.getElementById('td-curr-total').innerText = totalCurrent;
+        document.getElementById('td-final-total').innerText = totalAfter;
+
+        const badge = document.getElementById('res-status-badge');
+        const lang = translations[currentLang];
+        if (additionalRequired === 0) {
+            badge.innerText = lang.statusMet;
+            badge.className = "status-badge status-success";
+        } else {
+            badge.innerText = `${lang.statusNeed} (+${additionalRequired})`;
+            badge.className = "status-badge status-warning";
+        }
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        document.documentElement.setAttribute('lang', currentLang);
+        document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+
+        const t = translations[currentLang];
+        document.getElementById('txt-title').innerText = t.title;
+        document.getElementById('txt-subtitle').innerText = t.subtitle;
+        document.getElementById('txt-input-header').innerText = t.inputHeader;
+        document.getElementById('lbl-profession').innerText = t.lblProfession;
+        document.getElementById('lbl-target-rate').innerText = t.lblTargetRate;
+        document.getElementById('lbl-jobs-list').innerText = t.lblJobsList;
+        document.getElementById('th-job-title').innerText = t.thJobTitle;
+        document.getElementById('th-non-saudi').innerText = t.thNonSaudi;
+        document.getElementById('th-saudi').innerText = t.thSaudi;
+        document.getElementById('txt-results-header').innerText = t.resultsHeader;
+        document.getElementById('res-lbl-req').innerText = t.resReq;
+        document.getElementById('res-lbl-curr-rate').innerText = t.resCurrRate;
+        document.getElementById('res-lbl-target-rate').innerText = t.resTargetRate;
+        document.getElementById('res-lbl-final-saudi').innerText = t.resFinalSaudi;
+        document.getElementById('res-lbl-final-total').innerText = t.resFinalTotal;
+        document.getElementById('res-lbl-adj-rate').innerText = t.resAdjRate;
+        document.getElementById('th-metric').innerText = t.thMetric;
+        document.getElementById('th-before').innerText = t.thBefore;
+        document.getElementById('th-after').innerText = t.thAfter;
+        document.getElementById('td-lbl-saudis').innerText = t.tdSaudis;
+        document.getElementById('td-lbl-foreigners').innerText = t.tdForeigners;
+        document.getElementById('td-lbl-rate').innerText = t.tdRate;
+        document.getElementById('td-lbl-total').innerText = t.tdTotal;
+        document.getElementById('txt-footer').innerText = t.footer;
+        document.getElementById('btn-reset').innerText = t.btnReset;
+        document.getElementById('btn-lang').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+
+        const sectorKey = document.getElementById('professionSelect').value;
+        buildJobRows(sectorKey);
+    }
+
+    function toggleTheme() {
+        const body = document.documentElement;
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', newTheme);
+        document.getElementById('btn-theme').innerText = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    onProfessionChange();
+</script>
+</body>
+</html>
